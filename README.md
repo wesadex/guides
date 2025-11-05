@@ -281,6 +281,21 @@ kubectl exec -it demo-local-pod -- sh -c 'cat /data/out.txt'
 
 ---
 
+## Конфиг crictl (на всех нодах)
+
+```bash
+sudo tee /etc/crictl.yaml >/dev/null <<'EOF'
+runtime-endpoint: unix:///run/k3s/containerd/containerd.sock
+image-endpoint: unix:///run/k3s/containerd/containerd.sock
+timeout: 10
+debug: false
+EOF
+
+ln -s /var/lib/rancher/rke2/bin/crictl /usr/local/bin/
+# Потом можно смотреть контейнеры в container-runtime
+crictl ps
+```
+
 ## Быстрые советы по неполадкам
 
 * `server`/`agent` долго стартуют: смотрите `journalctl -u rke2-... -f`, проверьте сеть к Docker Hub/реестрам, DNS, прокси/фаервол.
